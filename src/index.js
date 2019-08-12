@@ -1,15 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'font-awesome/css/font-awesome.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import {BrowserRouter} from "react-router-dom";
 
-import 'bootstrap/dist/css/bootstrap.css';
-import "bootstrap/js/src/collapse.js";
-import 'font-awesome/css/font-awesome.css';
+
+//import "bootstrap/js/src/collapse.js";
 
 ReactDOM.render(
-    <App />,
+    <BrowserRouter>
+        <App />
+    </BrowserRouter>
+    ,
     document.getElementById('root'))
 ;
 

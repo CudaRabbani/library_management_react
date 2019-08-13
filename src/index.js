@@ -6,6 +6,9 @@ import 'font-awesome/css/font-awesome.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import {BrowserRouter} from "react-router-dom";
+import Noty from 'noty';
+import "../node_modules/noty/lib/noty.css";
+import "../node_modules/noty/lib/themes/mint.css";
 
 
 //import "bootstrap/js/src/collapse.js";

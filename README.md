@@ -6,5 +6,10 @@ This is the front end project. The backend is made using Node.js. The backend is
 
 ### Packages Used:
 
- -[x] **Bootstrap**
- -[x] **Font-awesome**
+ - [x] **Bootstrap**
+ - [x] **Font-awesome**
+ - [x] **Lodash**
+ - [x] **Axios**
+ - [x] **Router**
+ - [x] **Noty** 
+ 

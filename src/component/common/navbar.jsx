@@ -1,35 +1,20 @@
 import React from 'react';
+import {NavLink} from "react-router-dom";
 import "bootstrap/js/src/collapse.js";
 const NavBar = () => {
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-            <a className="navbar-brand" href="/">Library Management System</a>
-            <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="navbarsExampleDefault"
-                    aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+            <NavLink className="navbar-brand" to="/">Library Management System</NavLink>
+            <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span className="navbar-toggler-icon"></span>
             </button>
-
-            <div className="collapse navbar-collapse" id="navbarsExampleDefault">
-                <ul className="navbar-nav mr-auto">
-                    <li className="nav-item active">
-                        <a className="nav-link" href="/">Home <span className="sr-only">(current)</span></a>
-                    </li>
-                    <li className="nav-item">
-                        <a className="nav-link" href="/">Link</a>
-                    </li>
-                    <li className="nav-item">
-                        <a className="nav-link disabled" href="/">Disabled</a>
-                    </li>
-                    <li className="nav-item dropdown">
-                        <a className="nav-link dropdown-toggle" href="https://example.com" id="dropdown01"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
-                        <div className="dropdown-menu" aria-labelledby="dropdown01">
-                            <a className="dropdown-item" href="/">Action</a>
-                            <a className="dropdown-item" href="/">Another action</a>
-                            <a className="dropdown-item" href="/">Something else here</a>
-                        </div>
-                    </li>
-                </ul>
+            <div className="collapse navbar-collapse" id="navbarNav">
+                <div className="navbar-nav">
+                    <NavLink className="nav-item nav-link" to="/">Home <span className="sr-only">(current)</span></NavLink>
+                    <NavLink className="nav-item nav-link" to="/books">Books</NavLink>
+                    <NavLink className="nav-item nav-link" to="/category">Category</NavLink>
+                </div>
             </div>
         </nav>
     );

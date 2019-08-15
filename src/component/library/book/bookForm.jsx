@@ -7,7 +7,10 @@ import Noty from "noty";
 import CustomSelect from "../../common/form/customSelect";
 import SubmitButton from "../../common/form/submitButton";
 
+
+axios.defaults.timeout = 10000;
 const book_api = 'http://localhost:4044/api/book';
+
 class BookForm extends Component {
 
     state={
@@ -149,7 +152,7 @@ class BookForm extends Component {
     }
 
     handleSubmit = (e) => {
-        console.log(this.state.book);
+        console.log('handle submit',this.state.book);
         e.preventDefault();
         if (!this.props.match.params.id) {
             this.AddBook();
@@ -175,6 +178,7 @@ class BookForm extends Component {
     };
 
     handleSelect = (e) => {
+        console.log('handle select',e.target.name, e.target.value)
         const book = {...this.state.book};
         book[e.target.name]=e.target.value;
         this.setState({book});

@@ -6,7 +6,7 @@ const CustomSelect = (props) => {
         <div className="form-group">
             <label>{fieldLabel}</label>
             <div className="input-group mb-3">
-                <select className="custom-select" id={fieldId} name={fieldId} onClick={(e)=>onChange(e)}>
+                <select className="custom-select" id={fieldId} name={fieldId} onChange={(e)=>onChange(e)}>
                     <option value="">Select One</option>
                     {options.map(a =>{
                         if (fieldValue) {

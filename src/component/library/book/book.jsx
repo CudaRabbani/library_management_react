@@ -3,7 +3,6 @@ import {Redirect, Route, Switch} from "react-router-dom";
 
 import ListGroup from "../../common/listgroup";
 import BookTable from "./bookTable";
-import AddBook from "./addBook";
 import BookForm from "./bookForm";
 
 class Book extends Component {

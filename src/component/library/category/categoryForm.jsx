@@ -31,7 +31,7 @@ class CategoryForm extends Component {
                     <input type="text" className="form-control" id="name" name="name"
                            placeholder={name ? name : 'Enter Category Name'}
                            value={name}
-                           onChange={(e)=>this.props.onInputChange(e)}
+                           onChange={(e)=>onInputChange(e)}
                     />
                 </div>
                 <div className="form-group">
@@ -47,7 +47,7 @@ class CategoryForm extends Component {
                     </div>
                 </div>
 
-                <button type="submit" className={buttonClass} onClick={(e)=>this.props.onSubmit(e)}>{buttonLabel}</button>
+                <button type="submit" className={buttonClass} onClick={(e)=>onSubmit(e)}>{buttonLabel}</button>
             </form>
         );
     }

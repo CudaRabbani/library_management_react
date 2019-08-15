@@ -5,6 +5,7 @@ import TextInput from "../../common/form/textInput";
 import CheckboxInput from "../../common/form/checkboxInput";
 import Noty from "noty";
 import CustomSelect from "../../common/form/customSelect";
+import SubmitButton from "../../common/form/submitButton";
 
 const book_api = 'http://localhost:4044/api/book';
 class BookForm extends Component {
@@ -12,8 +13,8 @@ class BookForm extends Component {
     state={
         categories: [],
         authors: [],
-        book: {'title':'', 'isActive': '', 'publish_date': '',
-            'pages':'', 'abstract':'', 'category':'', 'author':''},
+        book: {title:'', isActive: '', publish_date: '',
+            pages:'', abstract:'', category:'', author:''},
         selectedAuthor: '',
         selectedCategory: '',
         action: []
@@ -83,26 +84,21 @@ class BookForm extends Component {
         this.getCategory();
         const bookId = this.props.match.params.id;
         if (!bookId) {
-            console.log('no book id found');
             const button = {buttonClass: 'btn btn-primary', buttonLabel: 'Save'};
             this.setState({button});
-            const action='create';
             this.setState({action: 'create'});
             return;
         }
         else {
-            console.log('update');
             this.getBook(bookId);
             const button = {buttonClass: 'btn btn-warning', buttonLabel: 'Update'};
             this.setState({button});
-            const action='update';
             this.setState({action: 'update'});
         }
 
     }
 
     async AddBook() {
-        console.log('creating book', this.state.book);
         try {
             const {data} = await axios.post(book_api, this.state.book);
             new Noty ({
@@ -128,7 +124,7 @@ class BookForm extends Component {
     };
 
     async updatebook() {
-        console.log('update book', this.state.book);
+
         try {
             const {book} = this.state;
             const {data} = await axios.put(book_api+'/'+this.props.match.params.id, book);
@@ -153,6 +149,7 @@ class BookForm extends Component {
     }
 
     handleSubmit = (e) => {
+        console.log(this.state.book);
         e.preventDefault();
         if (!this.props.match.params.id) {
             this.AddBook();
@@ -181,6 +178,7 @@ class BookForm extends Component {
         const book = {...this.state.book};
         book[e.target.name]=e.target.value;
         this.setState({book});
+        console.log('handleSelect', this.state.book, e.target.value, e.target.name);
     }
 
     render() {
@@ -188,7 +186,6 @@ class BookForm extends Component {
         const {action} = this.state;
         let buttonLabel='';
         let buttonClass='';
-        console.log(action);
 
         if (action === 'update') {
             buttonLabel = 'Update';
@@ -199,7 +196,6 @@ class BookForm extends Component {
             buttonClass = "btn btn-primary";
         }
 
-        const {onInputChange, onCheck, onChange, onSubmit} = this.props;
         const {authors, categories} = this.state;
         return (
             <form>
@@ -244,7 +240,11 @@ class BookForm extends Component {
                            fieldValue={abstract}
                            onInputChange={this.handleChange}
                 />
-                <button type="submit" className={buttonClass} onClick={(e)=>this.handleSubmit(e)}>{buttonLabel}</button>
+                {/*<button type="submit" className={buttonClass} onClick={(e)=>this.handleSubmit(e)}>{buttonLabel}</button>*/}
+                <SubmitButton buttonClass={buttonClass}
+                              buttonLabel={buttonLabel}
+                              onSubmit={this.handleSubmit}
+                />
             </form>
         );
     }

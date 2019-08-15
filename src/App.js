@@ -16,8 +16,7 @@ function App() {
           <NavBar />
           <div className="m-3" key='routes'>
               <Switch>
-                  <Route path='/books' component={BookList}/>
-                  <Route path='/book/:id' component={Book}/>
+                  <Route path='/books' component={Book}/>
                   <Route path='/user/:id' component={UserInfo}/>
                   <Route path='/category' component={Category}/>
                   <Route path='/notfound' component={NotFound} />

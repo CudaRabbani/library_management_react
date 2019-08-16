@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Route, Switch, Redirect} from 'react-router-dom';
+import {Route, Switch, Redirect, Link} from 'react-router-dom';
 
 import CatchError from "../../common/catcherror";
 import CategoryTable from "./categoryTable";
@@ -12,20 +12,10 @@ class Category extends Component {
         errors: []
     };
 
-    handleSideBar = (item) => {
-        this.setState({selectedSideBarItem: item});
-        if (item.id === 0) {
-            this.props.history.push('/category');
-        }else {
-            this.props.history.push('/category/add');
-        }
+    componentDidMount() {
+        document.title = "Category Page";
+    }
 
-    };
-
-    sidebarItems = [
-        {id: 0, name: 'List Existing Categories'},
-        {id: 1, name: 'Add New category'}
-    ];
 
     render() {
         const {selectedSideBarItem} = this.state ;
@@ -36,11 +26,7 @@ class Category extends Component {
                 </div>
                 <div className="row m-2">
                     <div className="col-sm-3">
-                        <ListGroup
-                            listItems={this.sidebarItems}
-                            selectedItem={selectedSideBarItem}
-                            onHandleSideBar={this.handleSideBar}
-                        />
+                        <Link to="/category/add" className="btn btn-primary">New Category</Link>
                     </div>
                     <div className="col-sm-9">
                         <Switch>

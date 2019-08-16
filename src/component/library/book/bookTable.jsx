@@ -1,10 +1,12 @@
 import React, {Component} from 'react';
 import axios from "axios";
 import Noty from 'noty';
+import _ from "lodash";
 
 import TableHeader from "../../common/table/tableHeader";
 import TableBody from "../../common/table/tableBody";
-import _ from "lodash";
+import ListGroup from "../../common/listgroup";
+import {Link} from "react-router-dom";
 
 const api_endpoint = "http://localhost:4044/api/book";
 const category_api = 'http://localhost:4044/api/category';
@@ -58,7 +60,7 @@ class BookTable extends Component {
             }).show();
         }
         catch (ex) {
-            console.log(ex.response);
+            this.setState({books:beforeDelete});
             new Noty ({
                 theme: 'mint',
                 text: ex.response,
@@ -70,7 +72,6 @@ class BookTable extends Component {
     };
 
     handleCategorySideBar = (category) => {
-        console.log(category);
         this.setState({selectedCategory: category});
     };
 
@@ -78,7 +79,6 @@ class BookTable extends Component {
         const {books: allBooks, selectedCategory} = this.state;
         const filteredBooks = selectedCategory && selectedCategory._id ?
             allBooks.filter(book => book.category._id === selectedCategory._id) : allBooks;
-        console.log('filtered books', filteredBooks);
         return {totalFilteredBooks: filteredBooks.length,filteredBooks: filteredBooks };
     }
 
@@ -88,7 +88,6 @@ class BookTable extends Component {
             const {data} = await axios.get(api_endpoint);
             this.setState({books: data});
             const {data: tempCategories} = await axios.get(category_api);
-            //console.log(data);
             const categories = tempCategories.map(d=>_.pick(d,['_id','name']));
             const category = [{'_id': '', 'name': 'All Categories'},...categories];
             this.setState({category});
@@ -106,26 +105,26 @@ class BookTable extends Component {
 
     render() {
         const {selectedCategory} = this.state;
-        const {books} = this.state;
+        const {books, category} = this.state;
         const {totalFilteredBooks, filteredBooks} = this.getFilteredBooks();
         return (
             <div className="row">
                 <div className="col-sm-3">
-                    <ul className="list-group">
-                        {this.state.category.map(cat=>(
-                            <li key={cat._id}
-                                className={selectedCategory === cat ? "list-group-item active" : "list-group-item"}
-                                onClick={()=>this.handleCategorySideBar(cat)}
-                            >{cat.name}</li>
-                        ))}
-                    </ul>
+                    <ListGroup
+                        listItems={category}
+                        selectedItem={selectedCategory}
+                        onSelect={this.handleCategorySideBar}/>
                 </div>
                 <div className="col-sm-9">
+                    <Link
+                        to='/books/new'
+                        className="btn btn-primary"
+                        style={{marginBottom: 5}}
+                    >New Book </Link>
                     <p> Showing {totalFilteredBooks} Books out of {books.length} Books</p>
                     <table className="table m-1">
                         <TableHeader headerText={this.state.tableHeader}/>
                         <TableBody
-                            /*tableData={this.state.books}*/
                             tableData={filteredBooks}
                             tableDataExtractor={this.state.tableDataExtractor}
                         />

@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {Link} from 'react-router-dom';
 
 class CategoryForm extends Component {
 
@@ -48,6 +49,8 @@ class CategoryForm extends Component {
                 </div>
 
                 <button type="submit" className={buttonClass} onClick={(e)=>onSubmit(e)}>{buttonLabel}</button>
+
+                <Link to="/category" className="btn btn-secondary m-5">Cancel</Link>
             </form>
         );
     }

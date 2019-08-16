@@ -4,10 +4,9 @@ import {Route, Switch, Redirect} from "react-router-dom";
 
 import NavBar from './component/common/navbar';
 import Book from "./component/library/book/book";
-import BookList from "./component/library/booklist";
-import UserInfo from "./component/user/userinfo";
-import BookCategory from "./component/library/category/bookCategory";
+import User from "./component/user/user";
 import Category from "./component/library/category/category";
+import Author from "./component/library/author/author";
 import NotFound from "./component/common/notFound";
 
 function App() {
@@ -17,8 +16,9 @@ function App() {
           <div className="m-3" key='routes'>
               <Switch>
                   <Route path='/books' component={Book}/>
-                  <Route path='/user/:id' component={UserInfo}/>
+                  <Route path='/users' component={User}/>
                   <Route path='/category' component={Category}/>
+                  <Route path='/authors' component={Author}/>
                   <Route path='/notfound' component={NotFound} />
                   <Redirect from='/' to='/books'/>
                   <Redirect to='/notfound'/>

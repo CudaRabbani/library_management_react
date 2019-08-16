@@ -14,6 +14,8 @@ const NavBar = () => {
                     <NavLink className="nav-item nav-link" to="/">Home <span className="sr-only">(current)</span></NavLink>
                     <NavLink className="nav-item nav-link" to="/books">Books</NavLink>
                     <NavLink className="nav-item nav-link" to="/category">Category</NavLink>
+                    <NavLink className="nav-item nav-link" to="/authors">Author</NavLink>
+                    <NavLink className="nav-item nav-link" to="/users">User</NavLink>
                 </div>
             </div>
         </nav>

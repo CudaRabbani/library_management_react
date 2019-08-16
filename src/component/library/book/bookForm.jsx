@@ -1,11 +1,14 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 import _ from 'lodash';
+import Noty from "noty";
+
 import TextInput from "../../common/form/textInput";
 import CheckboxInput from "../../common/form/checkboxInput";
-import Noty from "noty";
 import CustomSelect from "../../common/form/customSelect";
 import SubmitButton from "../../common/form/submitButton";
+import CustomTextarea from "../../common/form/customTextarea";
+import {Link} from "react-router-dom";
 
 
 axios.defaults.timeout = 10000;
@@ -82,7 +85,6 @@ class BookForm extends Component {
     }
 
     async componentDidMount() {
-        console.log('book form component');
         this.getAuthor();
         this.getCategory();
         const bookId = this.props.match.params.id;
@@ -178,11 +180,10 @@ class BookForm extends Component {
     };
 
     handleSelect = (e) => {
-        console.log('handle select',e.target.name, e.target.value)
         const book = {...this.state.book};
         book[e.target.name]=e.target.value;
         this.setState({book});
-        console.log('handleSelect', this.state.book, e.target.value, e.target.name);
+//        console.log('handleSelect', this.state.book, e.target.value, e.target.name);
     }
 
     render() {
@@ -209,18 +210,41 @@ class BookForm extends Component {
                            fieldValue={title}
                            onInputChange={this.handleChange}
                 />
-                <CustomSelect fieldLabel='Author'
-                              fieldId='author'
-                              options={authors}
-                              fieldValue={author}
-                              onChange={this.handleSelect}
-                />
-                <CustomSelect fieldLabel='Category'
-                              fieldId='category'
-                              options={categories}
-                              fieldValue={category}
-                              onChange={this.handleSelect}
-                />
+                <div className="row">
+                    <div className="col-sm-6">
+                        <CustomSelect fieldLabel='Author'
+                                      fieldId='author'
+                                      options={authors}
+                                      fieldValue={author}
+                                      onChange={this.handleSelect}
+                        />
+                    </div>
+                    <div className="col-sm-6">
+                        <Link
+                            to='/authors/new'
+                            className="btn btn-primary"
+                            style={{marginTop: 32, marginLeft: 20}}
+                        >Create New Author </Link>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-sm-6">
+                        <CustomSelect fieldLabel='Category'
+                                      fieldId='category'
+                                      options={categories}
+                                      fieldValue={category}
+                                      onChange={this.handleSelect}
+                        />
+                    </div>
+                    <div className="col-sm-6">
+                        <Link
+                            to='/category/add'
+                            className="btn btn-primary"
+                            style={{marginTop: 32, marginLeft: 20}}
+                        >Create New Category </Link>
+                    </div>
+                </div>
+
                 <TextInput fieldLabel='Published On'
                            fieldId='publish_date'
                            palceHolder={publish_date}
@@ -238,17 +262,21 @@ class BookForm extends Component {
                            fieldValue={pages}
                            onInputChange={this.handleChange}
                 />
-                <TextInput fieldLabel='Abstract'
+                <CustomTextarea fieldLabel='Abstract'
                            fieldId='abstract'
                            palceHolder={abstract}
                            fieldValue={abstract}
                            onInputChange={this.handleChange}
                 />
-                {/*<button type="submit" className={buttonClass} onClick={(e)=>this.handleSubmit(e)}>{buttonLabel}</button>*/}
                 <SubmitButton buttonClass={buttonClass}
                               buttonLabel={buttonLabel}
                               onSubmit={this.handleSubmit}
                 />
+                <Link
+                    to='/books'
+                    className="btn btn-secondary"
+                    style={{margin: 20}}
+                >Cancel </Link>
             </form>
         );
     }

@@ -8,6 +8,7 @@ import User from "./component/user/user";
 import Category from "./component/library/category/category";
 import Author from "./component/library/author/author";
 import NotFound from "./component/common/notFound";
+import BookInventory from "./component/library/inventory/bookInventory";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <NavBar />
           <div className="m-3" key='routes'>
               <Switch>
+                  <Route path='/inventory' component={BookInventory}/>
                   <Route path='/books' component={Book}/>
                   <Route path='/users' component={User}/>
                   <Route path='/category' component={Category}/>

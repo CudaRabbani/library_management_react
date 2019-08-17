@@ -15,7 +15,8 @@ class UserPassword extends Component {
         user: {email:''},
         userFound: false,
         userPass:[],
-        confirmPass:[]
+        confirmPass:[],
+        action:[]
     };
 
     handleChange = (e) => {
@@ -28,6 +29,33 @@ class UserPassword extends Component {
         const user = {...this.state.user};
         user[e.currentTarget.name] = e.currentTarget.value;
         this.setState({user});
+    }
+
+    async resetPassword() {
+        const data = _.pick(this.state.user, ['password']);
+        const userinfo_id = this.state.user._id;
+        const finaldata = {...data};
+
+        const user_api = "http://localhost:4044/api/user/password/"+this.state.user._id;
+        try {
+            const {data} = await axios.put(user_api,finaldata);
+            new Noty ({
+                theme: 'mint',
+                text: 'Data Updated successfully',
+                type: "success",
+                timeout: 4000
+            }).show();
+            this.props.history.push('/users');
+        }
+        catch (ex) {
+            const msg = `${ex.response}`;
+            new Noty ({
+                theme: 'mint',
+                text: msg,
+                type: "error",
+                timeout: 4000
+            }).show();
+        }
     }
 
     async savePassword () {
@@ -57,11 +85,14 @@ class UserPassword extends Component {
         }
     }
 
-
     checkPassword = (e) =>{
         e.preventDefault();
         const {password, con_pass} = this.state.user;
         if (password === con_pass) {
+            if (this.state.action === 'pass_reset') {
+                this.resetPassword();
+                return;
+            }
             this.savePassword();
         }
         else {
@@ -102,6 +133,14 @@ class UserPassword extends Component {
         e.preventDefault();
         this.getUserInfo()
     }
+
+    componentDidMount() {
+        document.title="Password Reset";
+        if (this.props.location.pathname.indexOf('/reset') > 0) {
+            this.setState({action:'pass_reset'});
+        }
+    }
+
     render() {
         return (
             <div>

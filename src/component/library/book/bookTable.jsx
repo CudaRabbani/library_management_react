@@ -25,13 +25,13 @@ class BookTable extends Component {
             {id: 0, type: 'data', data: 'title'},
             {id: 1, type: 'data', data: 'author.name'},
             {id: 2, type: 'data', data: 'category.name'},
-            {id: 4, type: 'button',
+            {id: 3, type: 'button',
                 content: book => <button
                     className="btn btn-warning btn-md"
                     onClick={()=>this.updateBook(book)}
                 >Edit</button>
             },
-            {id: 5, type: 'button',
+            {id: 4, type: 'button',
                 content: book => <button
                     className="btn btn-danger btn-md"
                     onClick={()=>this.deleteBook(book)}
@@ -108,27 +108,36 @@ class BookTable extends Component {
         const {books, category} = this.state;
         const {totalFilteredBooks, filteredBooks} = this.getFilteredBooks();
         return (
-            <div className="row">
-                <div className="col-sm-3">
-                    <ListGroup
-                        listItems={category}
-                        selectedItem={selectedCategory}
-                        onSelect={this.handleCategorySideBar}/>
+            <div>
+                <div className="row">
+                    <div className="col-sm-3"></div>
+                    <div className="col-sm-9">
+                        <Link
+                            to='/books/new'
+                            className="btn btn-primary"
+                            style={{marginBottom: 5}}
+                        >New Book </Link>
+                        <p> Showing {totalFilteredBooks} Books out of {books.length} Books</p>
+                    </div>
+
                 </div>
-                <div className="col-sm-9">
-                    <Link
-                        to='/books/new'
-                        className="btn btn-primary"
-                        style={{marginBottom: 5}}
-                    >New Book </Link>
-                    <p> Showing {totalFilteredBooks} Books out of {books.length} Books</p>
-                    <table className="table m-1">
-                        <TableHeader headerText={this.state.tableHeader}/>
-                        <TableBody
+                <div className="row">
+                    <div className="col-sm-3">
+                        <ListGroup
+                            listItems={category}
+                            selectedItem={selectedCategory}
+                            onSelect={this.handleCategorySideBar}
+                        />
+                    </div>
+                    <div className="col-sm-9">
+                        <table className="table m-1">
+                            <TableHeader headerText={this.state.tableHeader}/>
+                            <TableBody
                             tableData={filteredBooks}
                             tableDataExtractor={this.state.tableDataExtractor}
-                        />
-                    </table>
+                            />
+                        </table>
+                    </div>
                 </div>
             </div>
         );

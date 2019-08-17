@@ -23,6 +23,7 @@ class User extends Component {
                             <Route path="/users/new" exact component={UserForm}/>
                             <Route path="/users/edit/:id" exact component={UserForm}/>
                             <Route path="/users/password" exact component={UserPassword}/>
+                            <Route path="/users/password/reset" exact component={UserPassword}/>
                             <Redirect to="/notfound" exact component={NotFound}/>
                         </Switch>
                     </div>

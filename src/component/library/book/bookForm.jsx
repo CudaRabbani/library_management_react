@@ -154,7 +154,6 @@ class BookForm extends Component {
     }
 
     handleSubmit = (e) => {
-        console.log('handle submit',this.state.book);
         e.preventDefault();
         if (!this.props.match.params.id) {
             this.AddBook();

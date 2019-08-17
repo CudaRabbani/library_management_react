@@ -5,20 +5,20 @@ import {Link} from 'react-router-dom';
 import TextInput from "../../common/form/textInput";
 import SubmitButton from "../../common/form/submitButton";
 
+const author_api = "http://localhost:4044/api/author";
 class AuthorForm extends Component {
     state={
-        author:[],
+        author:{name: '', sex: '', dob: '', country:'', language:''},
         action:[]
     };
 
     async getAuthor(id) {
         try {
-            const api = "http://localhost:4044/api/author/"+id;
+            const api = author_api+'/'+id;
             const {data} = await axios.get(api);
             const temp = {...data};
-            console.log(temp);
             const tempDate= new Date(temp.dob);
-            let month = tempDate.getMonth().toString().length < 2 ? '0'+tempDate.getMonth() : tempDate.getMonth();
+            let month = tempDate.getMonth().toString().length < 2 ? '0'+(tempDate.getMonth()+1) : (tempDate.getMonth()+1);
             let date = tempDate.getDate().toString().length < 2 ? '0'+tempDate.getDate() : tempDate.getDate();
             temp['dob'] = tempDate.getFullYear()+"/"+month+"/"+date;
             this.setState({author: temp});
@@ -27,6 +27,32 @@ class AuthorForm extends Component {
             new Noty ({
                 theme: 'mint',
                 text: ex.response,
+                type: "error",
+                timeout: 4000
+            }).show();
+        }
+    }
+
+    async postAuthor () {
+
+        let api_endpoint = author_api;
+        if (this.state.action === 'update') {
+            api_endpoint += "/"+this.state.author._id;
+        }
+        try {
+            const {data} = await axios.post(api_endpoint, this.state.author);
+            new Noty ({
+                theme: 'mint',
+                text: 'Data saved successfully',
+                type: "success",
+                timeout: 4000
+            }).show();
+            this.props.history.push('/authors');
+        }
+        catch(ex) {
+            new Noty ({
+                theme: 'mint',
+                text: ex.response || ex.request,
                 type: "error",
                 timeout: 4000
             }).show();
@@ -44,9 +70,15 @@ class AuthorForm extends Component {
         this.getAuthor(authorId);
     }
 
+    handleTextInput = (e) => {
+        const author = {...this.state.author};
+        author[e.currentTarget.name] = e.currentTarget.value;
+        this.setState({author});
+    }
+
     handleSubmit = (e) => {
         e.preventDefault();
-        console.log('form submitted');
+        this.postAuthor();
     }
 
     render() {
@@ -62,6 +94,7 @@ class AuthorForm extends Component {
                                fieldId="name"
                                placeHolder={name}
                                fieldValue={name}
+                               onInputChange={this.handleTextInput}
                     />
                     <div className="row">
                         <div className="col-sm-6">
@@ -69,6 +102,7 @@ class AuthorForm extends Component {
                                        fieldId="sex"
                                        placeHolder={sex}
                                        fieldValue={sex}
+                                       onInputChange={this.handleTextInput}
                             />
                         </div>
                         <div className="col-sm-6">
@@ -76,6 +110,7 @@ class AuthorForm extends Component {
                                        fieldId="dob"
                                        placeHolder={dob}
                                        fieldValue={dob}
+                                       onInputChange={this.handleTextInput}
                             />
                         </div>
                     </div>
@@ -85,6 +120,7 @@ class AuthorForm extends Component {
                                        fieldId="language"
                                        placeHolder={language}
                                        fieldValue={language}
+                                       onInputChange={this.handleTextInput}
                             />
                         </div>
                         <div className="col-sm-6">
@@ -92,6 +128,7 @@ class AuthorForm extends Component {
                                        fieldId="country"
                                        placeHolder={country}
                                        fieldValue={country}
+                                       onInputChange={this.handleTextInput}
                             />
                         </div>
                     </div>

@@ -6,7 +6,6 @@ import Noty from "noty";
 import axios from 'axios';
 import _ from 'lodash';
 import CustomSelect from "../common/form/customSelect";
-import CheckboxInput from "../common/form/checkboxInput";
 
 const api_endpoint = "http://localhost:4044/api/userinfo";
 
@@ -16,7 +15,7 @@ class UserForm extends Component {
     state={
         action: [],
         usersex: [],
-        userinfo: { fname: '', lname: '', phone:'', email: '', sex:'', dob:'', isActive:'',
+        userinfo: { fname: '', lname: '', phone:'', email: '', sex:'', dob:'',
             address:'', city: '',postalCode:'', province: '', country: ''
         }
     };
@@ -34,7 +33,7 @@ class UserForm extends Component {
                             'address', 'city', 'postalCode', 'province', 'country', 'dob']);
             const userinfo = {...users};
             let tempDOB = new Date(userinfo.dob);
-            userinfo['dob'] = tempDOB.getFullYear()+"/"+tempDOB.getMonth()+"/"+tempDOB.getDate();
+            userinfo['dob'] = tempDOB.getFullYear()+"/"+(tempDOB.getMonth()+1)+"/"+tempDOB.getDate();
             this.setState({userinfo})
             const usersex=this.sex.filter (s=> s.name===this.state.userinfo.sex);
             this.setState({usersex: usersex[0]});
@@ -56,7 +55,6 @@ class UserForm extends Component {
     };
 
     handleSelect = (e) => {
-        //console.log(this.state.userinfo);
         const userinfo = {...this.state.userinfo};
         userinfo[e.target.name] = e.target.value;
         this.setState({userinfo});
@@ -187,13 +185,6 @@ class UserForm extends Component {
                                onInputChange={this.handleTextInputChange}
                     />
                     <div className="row">
-                        <div className="col-sm-6">
-                            <CheckboxInput fieldLabel='Is Active'
-                                           fieldId='isActive'
-                                           fieldValue={isActive}
-                                           onCheck={this.handleCheckbox}
-                            />
-                        </div>
                         <div className="col-sm-6">
                             <CustomSelect fieldLabel='Sex'
                                           fieldId='sex'

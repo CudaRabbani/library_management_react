@@ -6,6 +6,7 @@ import TableHeader from "../common/table/tableHeader";
 import TableBody from "../common/table/tableBody";
 import {Link} from "react-router-dom";
 import Noty from "noty";
+import ListGroup from "../common/listgroup";
 
 class UserInfo extends Component {
 
@@ -16,7 +17,6 @@ class UserInfo extends Component {
             {id: 2, label: 'Last Name'},
             {id: 3, label: 'Email'},
             {id: 4, label: 'Role'},
-//            {id: 5, label: 'Account Open'},
             {id: 6, label:''},
             {id: 7, label:''}
         ],
@@ -39,7 +39,9 @@ class UserInfo extends Component {
                 >Delete</button>
             }
         ],
-        userinfo: []
+        userinfo: [],
+        userCategory:[],
+        infoDisplayed: []
     };
 
     updateUser = (user) => {
@@ -48,9 +50,9 @@ class UserInfo extends Component {
     };
     deleteUser = async (user) => {
         console.log('delete user');
-        const beforeDelete = this.state.userinfo;
+        const beforeDelete = this.state.infoDisplayed;
         const afterDelete =  beforeDelete.filter(u=> u._id !== user._id);
-        this.setState({userinfo: afterDelete});
+        this.setState({infoDisplayed: afterDelete});
 
         try {
             const {data} = await axios.delete("http://localhost:4044/api/user/"+user._id);
@@ -73,6 +75,12 @@ class UserInfo extends Component {
         }
     };
 
+    userCategories = [
+        {_id: 0, name: "All Users"},
+        {_id: 1, name: "Active"},
+        {_id: 2, name: "Inactive"}
+    ];
+
     async componentDidMount() {
         const userinfo_endpoint = "http://localhost:4044/api/user";
         const {data} = await axios.get(userinfo_endpoint);
@@ -82,13 +90,50 @@ class UserInfo extends Component {
             return temp;
         });
         this.setState({userinfo});
+        this.setState({infoDisplayed:userinfo});
+        this.setState({userCategory: this.userCategories[0]});
+    }
+
+    getSelectedCategoryUser(category) {
+        const users = this.state.userinfo;
+        if (category === 'all') {
+            this.setState({infoDisplayed:users});
+        }
+        else if (category === 'true') {
+            const activeUsers = users.filter (user=> user.userinfo.isActive ? user : null);
+            this.setState({infoDisplayed:activeUsers});
+        }
+        else {
+            const inactiveUsers = users.filter (user=> !user.userinfo.isActive ? user : null);
+            this.setState({infoDisplayed:inactiveUsers});
+        }
+    }
+
+    handleUserCategory = (item) => {
+        let category = '';
+        if (item.name === "Active") {
+            category = 'true';
+        }
+        else if (item.name === "Inactive") {
+            category = 'false';
+        }
+        else {
+            category = 'all';
+        }
+        this.setState({userCategory: item});
+        this.getSelectedCategoryUser(category);
     }
 
     render() {
-        const {userinfo, tableHeader, tableDataExtractor} = this.state;
+        const {infoDisplayed, tableHeader, tableDataExtractor, userCategory} = this.state;
         return (
            <div className="row">
-               <div className="col-sm-2"></div>
+               <div className="col-sm-2">
+                   <ListGroup listItems={this.userCategories}
+                              selectedItem={userCategory}
+                              onSelect={this.handleUserCategory}
+                   />
+               </div>
                <div className="col">
                    <Link
                        to="/users/new"
@@ -97,7 +142,7 @@ class UserInfo extends Component {
                    <table className="table m-1">
                        <TableHeader headerText={tableHeader}/>
                        <TableBody
-                           tableData={userinfo}
+                           tableData={infoDisplayed}
                            tableDataExtractor={tableDataExtractor}
                        />
                    </table>

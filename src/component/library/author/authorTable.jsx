@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
-import _ from 'lodash';
 
 import TableHeader from "../../common/table/tableHeader";
 import TableBody from "../../common/table/tableBody";
 import Noty from "noty";
+const author_api = "http://localhost:4044/api/author";
 
 class AuthorTable extends Component {
     state = {
@@ -47,7 +47,7 @@ class AuthorTable extends Component {
             const authors = data.map(author=>{
                 const temp = {...author};
                 const tempDate= new Date(temp.dob);
-                let month = tempDate.getMonth().toString().length < 2 ? '0'+tempDate.getMonth() : tempDate.getMonth();
+                let month = tempDate.getMonth().toString().length < 2 ? '0'+(tempDate.getMonth()+1) : (tempDate.getMonth()+1);
                 let date = tempDate.getDate().toString().length < 2 ? '0'+tempDate.getDate() : tempDate.getDate();
                 temp['dob'] = tempDate.getFullYear()+"/"+month+"/"+date;
                 return temp;
@@ -71,13 +71,32 @@ class AuthorTable extends Component {
     }
 
     updateAuthor = (author) => {
-        console.log('author updated');
         this.props.history.push('/authors/edit/'+author._id);
-
     }
 
     deleteAuthor = async(author) => {
         console.log('author deleted');
+        const beforeDelete = this.state.authors;
+        const afterDelete = beforeDelete.filter(a=> a._id !== author._id);
+        this.setState({authors: afterDelete});
+        try {
+            const {data} = await axios.delete(author_api+'/'+author._id);
+            new Noty ({
+                theme: 'mint',
+                text: 'Data saved successfully',
+                type: "success",
+                timeout: 4000
+            }).show();
+            this.props.history.push('/authors');
+        }
+        catch (ex) {
+            new Noty ({
+                theme: 'mint',
+                text: ex.response || ex.request || ex.message,
+                type: "error",
+                timeout: 4000
+            }).show();
+        }
     }
 
     render() {

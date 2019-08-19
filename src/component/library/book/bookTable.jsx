@@ -7,40 +7,66 @@ import TableHeader from "../../common/table/tableHeader";
 import TableBody from "../../common/table/tableBody";
 import ListGroup from "../../common/listgroup";
 import {Link} from "react-router-dom";
+import {CurrentUser, getRole} from "../../../util/currentUser";
 
 const api_endpoint = "http://localhost:4044/api/book";
 const category_api = 'http://localhost:4044/api/category';
 
 class BookTable extends Component {
+    tableHeader= [
+        {id: 0, label: '#'},
+        {id: 1, label: 'Title'},
+        {id: 2, label: 'Author'},
+        {id: 3, label: 'Category'},
+
+    ];
+    tableDataExtractor= [
+        {id: 0, type: 'data', data: 'title'},
+        {id: 1, type: 'data', data: 'author.name'},
+        {id: 2, type: 'data', data: 'category.name'},
+
+    ];
     state={
-        tableHeader: [
-            {id: 0, label: '#'},
-            {id: 1, label: 'Title'},
-            {id: 2, label: 'Author'},
-            {id: 3, label: 'Category'},
-            {id: 4, label: ''},
-            {id: 5, label: ''}
-        ],
-        tableDataExtractor: [
-            {id: 0, type: 'data', data: 'title'},
-            {id: 1, type: 'data', data: 'author.name'},
-            {id: 2, type: 'data', data: 'category.name'},
-            {id: 3, type: 'button',
-                content: book => <button
-                    className="btn btn-warning btn-md"
-                    onClick={()=>this.updateBook(book)}
-                >Edit</button>
-            },
-            {id: 4, type: 'button',
-                content: book => <button
-                    className="btn btn-danger btn-md"
-                    onClick={()=>this.deleteBook(book)}
-                >Delete</button>
-            }
-        ],
         books: [],
         category: []
     };
+
+    constructor() {
+        super();
+        if (getRole() === 'admin') {
+            this.tableHeader.push(
+                {id: 4, label: ''},
+                {id: 5, label: ''}
+            );
+            this.tableDataExtractor.push(
+                {id: 3, type: 'button',
+                    content: book => <button
+                        className="btn btn-warning btn-md"
+                        onClick={()=>this.updateBook(book)}
+                    >Edit</button>
+                },
+                {id: 4, type: 'button',
+                    content: book => <button
+                        className="btn btn-danger btn-md"
+                        onClick={()=>this.deleteBook(book)}
+                    >Delete</button>
+                }
+            );
+        }
+        else {
+            this.tableHeader.push(
+                {id: 4, label: ''}
+            );
+            this.tableDataExtractor.push(
+                {id: 3, type: 'button',
+                    content: book => <button
+                        className="btn btn-warning btn-md"
+                        onClick={()=>this.updateBook(book)}
+                    >Show</button>
+                },
+            );
+        }
+    }
 
     updateBook = (book) => {
         this.props.history.push('/books/edit/'+book._id);
@@ -84,6 +110,7 @@ class BookTable extends Component {
 
 
     async componentDidMount() {
+
         try {
             const {data} = await axios.get(api_endpoint);
             this.setState({books: data});
@@ -105,18 +132,23 @@ class BookTable extends Component {
 
     render() {
         const {selectedCategory} = this.state;
-        const {books, category} = this.state;
+        const {books, category, user} = this.state;
         const {totalFilteredBooks, filteredBooks} = this.getFilteredBooks();
         return (
             <div>
                 <div className="row">
                     <div className="col-sm-3"></div>
                     <div className="col-sm-9">
-                        <Link
-                            to='/books/new'
-                            className="btn btn-primary"
-                            style={{marginBottom: 5}}
-                        >New Book </Link>
+                        {user && user.role === 'admin'
+                            ? (
+                            <Link
+                                to='/books/new'
+                                className="btn btn-primary"
+                                style={{marginBottom: 5}}
+                            >New Book </Link>
+                        )
+                        :
+                        ''}
                         <p> Showing {totalFilteredBooks} Books out of {books.length} Books</p>
                     </div>
 
@@ -131,10 +163,10 @@ class BookTable extends Component {
                     </div>
                     <div className="col-sm-9">
                         <table className="table m-1">
-                            <TableHeader headerText={this.state.tableHeader}/>
+                            <TableHeader headerText={this.tableHeader}/>
                             <TableBody
                             tableData={filteredBooks}
-                            tableDataExtractor={this.state.tableDataExtractor}
+                            tableDataExtractor={this.tableDataExtractor}
                             />
                         </table>
                     </div>

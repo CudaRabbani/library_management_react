@@ -4,6 +4,7 @@ import _ from 'lodash';
 
 import TextInput from "../common/form/textInput";
 import SubmitButton from "../common/form/submitButton";
+import http from '../../util/httpService';
 import Noty from "noty";
 import {Link} from "react-router-dom";
 
@@ -36,7 +37,8 @@ class UserPassword extends Component {
         const userinfo_id = this.state.user._id;
         const finaldata = {...data};
 
-        const user_api = "http://localhost:4044/api/user/password/"+this.state.user._id;
+        const user_api = "http://localhost:4044/api/user/password/"+userinfo_id;
+
         try {
             const {data} = await axios.put(user_api,finaldata);
             new Noty ({
@@ -47,8 +49,8 @@ class UserPassword extends Component {
             }).show();
             this.props.history.push('/users');
         }
-        catch (ex) {
-            const msg = `${ex.response}`;
+        catch (err) {
+            const msg = `${err.response.data}`;
             new Noty ({
                 theme: 'mint',
                 text: msg,
@@ -107,6 +109,7 @@ class UserPassword extends Component {
 
     async getUserInfo () {
         const {email} = this.state.user;
+        http.setToken();
         try {
             const {data} = await axios.get(userinfo_api+'/email/'+email);
 
@@ -114,11 +117,10 @@ class UserPassword extends Component {
                 throw new Error('Invalid Email Address');
             }
             this.setState({user: data});
-            console.log(this.state.user);
             this.setState({userFound: true});
         }
         catch(ex) {
-            const msg = ex.response || ex.message;
+            const msg = ex.response.data || ex.message;
             new Noty ({
                 theme: 'mint',
                 text: msg,
@@ -126,7 +128,6 @@ class UserPassword extends Component {
                 timeout: 4000
             }).show();
         }
-
     }
 
     findUserInfo = (e) => {
@@ -143,7 +144,7 @@ class UserPassword extends Component {
 
     render() {
         return (
-            <div>
+            <div className="container">
                 <h3>User Password Form</h3>
                 {!this.state.userFound ?
                     <form>
@@ -159,7 +160,6 @@ class UserPassword extends Component {
                     </form>
                 :
                     <form>
-                        <p>User form {this.state.user._id}</p>
                         <TextInput fieldLabel='Email Address'
                                    fieldId='email'
                                    fieldValue={this.state.user.email}

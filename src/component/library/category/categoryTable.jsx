@@ -3,38 +3,50 @@ import TableHeader from "../../common/table/tableHeader";
 import TableBody from "../../common/table/tableBody";
 import axios from "axios";
 import Noty from 'noty';
+import {getRole} from "../../../util/currentUser";
 
 const api_endpoint = "http://localhost:4044/api/category";
 
 
 class CategoryTable extends Component {
+    tableHeader = [
+        {id: 0, label: '#'},
+        {id: 1, label: 'Name'},
+        {id: 2, label: 'Is Active'},
+    ];
+    tableDataExtractor = [
+        {id: 0, type: 'data', data: 'name'},
+        {id: 1, type: 'data', data: 'isActive'},
+    ];
     state={
-        tableHeader: [
-            {id: 0, label: '#'},
-            {id: 1, label: 'Name'},
-            {id: 2, label: 'Is Active'},
-            {id: 3, label: ''},
-            {id: 4, label: ''}
-        ],
-        tableDataExtractor: [
-            {id: 0, type: 'data', data: 'name'},
-            {id: 1, type: 'data', data: 'isActive'},
-            {id: 2, type: 'button',
-                content: category => <button
-                    className="btn btn-warning btn-md"
-                    onClick={()=>this.updateCategory(category)}
-                >Edit</button>
-            },
-            {id: 3, type: 'button',
-                content: category => <button
-                    className="btn btn-danger btn-md"
-                    onClick={()=>this.deleteCategory(category)}
-                >Delete</button>
-            }
-        ],
         categories: [],
         errors:[]
     };
+
+    constructor() {
+        super();
+        const role=getRole();
+        if (role === 'admin') {
+            this.tableDataExtractor.push(
+                {id: 2, type: 'button',
+                    content: category => <button
+                        className="btn btn-warning btn-md"
+                        onClick={()=>this.updateCategory(category)}
+                    >Edit</button>
+                },
+                {id: 3, type: 'button',
+                    content: category => <button
+                        className="btn btn-danger btn-md"
+                        onClick={()=>this.deleteCategory(category)}
+                    >Delete</button>
+                }
+            );
+            this.tableHeader.push(
+                {id: 3, label: ''},
+                {id: 4, label: ''}
+            );
+        }
+    }
 
     updateCategory = (category) => {
         console.log('Update: ', category);
@@ -83,10 +95,10 @@ class CategoryTable extends Component {
     render() {
         return (
             <table className="table m-1">
-                <TableHeader headerText={this.state.tableHeader}/>
+                <TableHeader headerText={this.tableHeader}/>
                 <TableBody
                     tableData={this.state.categories}
-                    tableDataExtractor={this.state.tableDataExtractor}
+                    tableDataExtractor={this.tableDataExtractor}
                 />
             </table>
         );

@@ -6,6 +6,7 @@ import Noty from "noty";
 import axios from 'axios';
 import _ from 'lodash';
 import CustomSelect from "../common/form/customSelect";
+import http from '../../util/httpService';
 
 const api_endpoint = "http://localhost:4044/api/userinfo";
 
@@ -26,6 +27,7 @@ class UserForm extends Component {
 
 
     async getUserInfo (id) {
+        http.setToken();
         const userInfo_endpoint = api_endpoint+'/'+id;
         try {
             const {data} = await axios.get(userInfo_endpoint);
@@ -39,12 +41,14 @@ class UserForm extends Component {
             this.setState({usersex: usersex[0]});
         }
         catch (ex) {
+            const msg = ex.response ? ex.response.status +': '+ex.response.data : ex.message;
             new Noty ({
                 theme: 'mint',
-                text: ex.response || ex.message,
+                text: msg,
                 type: "error",
                 timeout: 4000
             }).show();
+            this.props.history.push('/users');
         }
     }
 

@@ -1,21 +1,24 @@
 import React, {Component} from 'react';
+import http from "../../../util/httpService";
 import axios from 'axios';
 import Noty from "noty";
 import {Link} from 'react-router-dom';
 import TextInput from "../../common/form/textInput";
 import SubmitButton from "../../common/form/submitButton";
+import {CurrentUser} from "../../../util/currentUser";
 
 const author_api = "http://localhost:4044/api/author";
 class AuthorForm extends Component {
     state={
         author:{name: '', sex: '', dob: '', country:'', language:''},
-        action:[]
+        action:[],
+        user: {}
     };
 
     async getAuthor(id) {
         try {
             const api = author_api+'/'+id;
-            const {data} = await axios.get(api);
+            const {data} = await http.get(api);
             const temp = {...data};
             const tempDate= new Date(temp.dob);
             let month = tempDate.getMonth().toString().length < 2 ? '0'+(tempDate.getMonth()+1) : (tempDate.getMonth()+1);
@@ -34,13 +37,21 @@ class AuthorForm extends Component {
     }
 
     async postAuthor () {
+        //axios.defaults.headers.common['x-auth-token'] = getToken();
 
         let api_endpoint = author_api;
         if (this.state.action === 'update') {
             api_endpoint += "/"+this.state.author._id;
         }
         try {
-            const {data} = await axios.post(api_endpoint, this.state.author);
+            http.setToken();
+            if (this.state.action === 'update') {
+                const {data} = await http.put(api_endpoint, this.state.author);
+            }
+            else {
+                const {data} = await http.post(api_endpoint, this.state.author);
+            }
+
             new Noty ({
                 theme: 'mint',
                 text: 'Data saved successfully',
@@ -50,9 +61,10 @@ class AuthorForm extends Component {
             this.props.history.push('/authors');
         }
         catch(ex) {
+            const msg = ex.response ? ex.response.status +': '+ex.response.data : ex.message;
             new Noty ({
                 theme: 'mint',
-                text: ex.response || ex.request,
+                text: msg,
                 type: "error",
                 timeout: 4000
             }).show();
@@ -61,6 +73,8 @@ class AuthorForm extends Component {
 
     componentDidMount() {
         document.title="Author Form";
+        const user = CurrentUser();
+        this.setState({user});
         const authorId = this.props.match.params.id;
         if(!authorId) {
             this.setState({action: 'create'});

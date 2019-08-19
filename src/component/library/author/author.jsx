@@ -15,15 +15,23 @@ class Author extends Component {
         return (
             <div className="container">
                 <Switch>
-                    <Route path="/authors" exact component={AuthorTable}/>
-                    <Route path="/authors/new" exact component={AuthorForm}/>
-                    <Route path="/authors/edit/:id" exact component={AuthorForm}/>
+                    <Route path="/authors" exact render={ props => <AuthorTable {...props} user={this.props.user}/>}/>
+                    <Route path="/authors/new" exact render={ props => <AuthorForm {...props} user={this.props.user}/>}/>
+                    <Route path="/authors/edit/:id" exact component={ props=><AuthorForm {...props} user={this.props.user}/>}/>
                     <Redirect to="/notfound" exact component={NotFound}/>
                 </Switch>
             </div>
         );
     }
 }
+//<Route path="/authors" exact render={ props => <AuthorTable {...props} user={this.props.user}/>}/>
+
+/*
+<Route path="/authors" exact render={AuthorTable}/>
+                    <Route path="/authors/new" exact component={AuthorForm}/>
+                    <Route path="/authors/edit/:id" exact component={AuthorForm}/>
+                    <Redirect to="/notfound" exact component={NotFound}/>
+ */
 
 
 export default Author;

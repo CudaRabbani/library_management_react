@@ -5,7 +5,7 @@ import Noty from "noty";
 import {Link} from 'react-router-dom';
 import TextInput from "../../common/form/textInput";
 import SubmitButton from "../../common/form/submitButton";
-import {getUser, getToken} from "../../../util/getUser";
+import {CurrentUser} from "../../../util/currentUser";
 
 const author_api = "http://localhost:4044/api/author";
 class AuthorForm extends Component {
@@ -38,13 +38,20 @@ class AuthorForm extends Component {
 
     async postAuthor () {
         //axios.defaults.headers.common['x-auth-token'] = getToken();
-        http.setToken();
+
         let api_endpoint = author_api;
         if (this.state.action === 'update') {
             api_endpoint += "/"+this.state.author._id;
         }
         try {
-            const {data} = await http.post(api_endpoint, this.state.author);
+            http.setToken();
+            if (this.state.action === 'update') {
+                const {data} = await http.put(api_endpoint, this.state.author);
+            }
+            else {
+                const {data} = await http.post(api_endpoint, this.state.author);
+            }
+
             new Noty ({
                 theme: 'mint',
                 text: 'Data saved successfully',
@@ -66,7 +73,7 @@ class AuthorForm extends Component {
 
     componentDidMount() {
         document.title="Author Form";
-        const user = getUser();
+        const user = CurrentUser();
         this.setState({user});
         const authorId = this.props.match.params.id;
         if(!authorId) {

@@ -1,5 +1,5 @@
 import axios from "axios";
-import {getToken} from "./getUser";
+import {getToken} from "./currentUser";
 
 axios.interceptors.response.use(null, error=> {
 
@@ -12,7 +12,7 @@ axios.interceptors.response.use(null, error=> {
     return Promise.reject(error);
 });
 
-function setToken() {
+export function setToken() {
     axios.defaults.headers.common['x-auth-token'] = getToken();
 }
 

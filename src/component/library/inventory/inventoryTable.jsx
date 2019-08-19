@@ -4,39 +4,40 @@ import TableHeader from "../../common/table/tableHeader";
 import TableBody from "../../common/table/tableBody";
 import {Link} from "react-router-dom";
 import Noty from "noty";
+import {CurrentUser} from "../../../util/currentUser";
 
 class InventoryTable extends Component {
+    tableHeader= [
+        {id: 0, label: '#'},
+        {id: 1, label: 'Book Title'},
+        {id: 2, label: 'Quantity In Hand'},
+        {id: 3, label: 'Purchase Cost'},
+        {id: 4, label: 'Rent Per Day'},
+        {id: 5, label: 'Added On'},
+        {id: 6, label: ''},
+        {id: 7, label: ''},
+    ];
+    tableDataExtractor= [
+        {id: 0, type: 'data', data: 'book.title'},
+        {id: 1, type: 'data', data: 'qtyInHand'},
+        {id: 2, type: 'data', data: 'cost'},
+        {id: 3, type: 'data', data: 'rent_per_day'},
+        {id: 4, type: 'data', data: 'added_on'},
+        {id: 5, type: 'button',
+            content: inventory => <button
+            className="btn btn-warning btn-md"
+            onClick={()=>this.handleEdit(inventory)}
+            >Edit</button>
+        },
+        {id: 6, type: 'button',
+            content: inventory => <button
+            className="btn btn-danger btn-md"
+            onClick={()=>this.handleDelete(inventory)}
+            >Delete</button>
+        }
+        ];
 
     state = {
-        tableHeader: [
-            {id: 0, label: '#'},
-            {id: 1, label: 'Book Title'},
-            {id: 2, label: 'Quantity In Hand'},
-            {id: 3, label: 'Purchase Cost'},
-            {id: 4, label: 'Rent Per Day'},
-            {id: 5, label: 'Added On'},
-            {id: 6, label: ''},
-            {id: 7, label: ''},
-        ],
-        tableDataExtractor: [
-            {id: 0, type: 'data', data: 'book.title'},
-            {id: 1, type: 'data', data: 'qtyInHand'},
-            {id: 2, type: 'data', data: 'cost'},
-            {id: 3, type: 'data', data: 'rent_per_day'},
-            {id: 4, type: 'data', data: 'added_on'},
-            {id: 5, type: 'button',
-                content: inventory => <button
-                    className="btn btn-warning btn-md"
-                    onClick={()=>this.handleEdit(inventory)}
-                >Edit</button>
-            },
-            {id: 6, type: 'button',
-                content: inventory => <button
-                    className="btn btn-danger btn-md"
-                    onClick={()=>this.handleDelete(inventory)}
-                >Delete</button>
-            }
-        ],
         inventoryList: []
     };
 
@@ -98,10 +99,12 @@ class InventoryTable extends Component {
     componentDidMount() {
         document.title="Inventory List";
         this.getInventoryLists();
+        const user=CurrentUser();
+        this.setState({user});
     }
 
     render() {
-        const {tableHeader, tableDataExtractor, inventoryList} = this.state;
+        const {inventoryList, user} = this.state;
         return (
             <div className="container">
                 <div className="row">
@@ -114,10 +117,10 @@ class InventoryTable extends Component {
                 <div className="row">
                     <div className="col-sm-1"></div>
                     <div className="col-sm-11">
-                        <Link to="/inventory/new" className="btn btn-primary" style={{marginLeft: 20}}>Create New</Link>
+                        {user && user.role==='admin' ? (<Link to="/inventory/new" className="btn btn-primary" style={{marginLeft: 20}}>Create New</Link>) : ''}
                         <table className="table m-1">
-                            <TableHeader headerText={tableHeader}/>
-                            <TableBody tableData={inventoryList} tableDataExtractor={tableDataExtractor}/>
+                            <TableHeader headerText={this.tableHeader}/>
+                            <TableBody tableData={inventoryList} tableDataExtractor={this.tableDataExtractor}/>
                         </table>
                     </div>
                 </div>

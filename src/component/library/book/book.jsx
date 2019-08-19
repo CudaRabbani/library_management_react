@@ -3,6 +3,7 @@ import {Redirect, Route, Switch} from "react-router-dom";
 
 import BookTable from "./bookTable";
 import BookForm from "./bookForm";
+import AdminRoute from "../../common/adminRoute";
 
 class Book extends Component {
 
@@ -15,7 +16,6 @@ class Book extends Component {
     }
 
     handleCategorySideBar = (category) => {
-        console.log(category);
         this.setState({selectedCategory: category});
     };
 
@@ -30,7 +30,7 @@ class Book extends Component {
                     <div className="col">
                         <Switch>
                             <Route path='/books' exact component={BookTable}/>
-                            <Route path='/books/new' exact component={BookForm}/>
+                            <AdminRoute path='/books/new' exact component={BookForm}/>
                             <Route path='/books/edit/:id' exact component={BookForm}/>
                             <Redirect to="/notfound"/>
                         </Switch>

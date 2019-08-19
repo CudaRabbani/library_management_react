@@ -2,13 +2,15 @@ import React, {Component} from 'react';
 import axios from 'axios';
 import _ from 'lodash';
 import Noty from "noty";
+import {Link} from "react-router-dom";
 
 import TextInput from "../../common/form/textInput";
 import CheckboxInput from "../../common/form/checkboxInput";
 import CustomSelect from "../../common/form/customSelect";
 import SubmitButton from "../../common/form/submitButton";
 import CustomTextarea from "../../common/form/customTextarea";
-import {Link} from "react-router-dom";
+import http from "../../../util/httpService";
+import {getRole} from "../../../util/currentUser";
 
 
 axios.defaults.timeout = 10000;
@@ -29,7 +31,7 @@ class BookForm extends Component {
     async getAuthor() {
         const authorURL = 'http://localhost:4044/api/author';
         try {
-            const {data} = await axios.get(authorURL);
+            const {data} = await http.get(authorURL);
             const extractedAuthor = data.map(d=>_.pick(d, ['_id', 'name']));
             const authors = extractedAuthor;
             this.setState({authors});
@@ -48,7 +50,7 @@ class BookForm extends Component {
     async getCategory() {
         const categoryURL = 'http://localhost:4044/api/category';
         try {
-            const {data} = await axios.get(categoryURL);
+            const {data} = await http.get(categoryURL);
             const extractedCategory = data.map(c=> _.pick(c, ['_id', 'name']))
             this.setState({categories:extractedCategory});
         }
@@ -63,9 +65,8 @@ class BookForm extends Component {
     }
 
     async getBook(_id) {
-        console.log(_id);
         try {
-            const {data} = await axios.get(book_api+'/'+_id);
+            const {data} = await http.get(book_api+'/'+_id);
             if (!data) {
                 throw new Error('No Data Found');
             }
@@ -104,8 +105,9 @@ class BookForm extends Component {
     }
 
     async AddBook() {
+        http.setToken();
         try {
-            const {data} = await axios.post(book_api, this.state.book);
+            const {data} = await http.post(book_api, this.state.book);
             new Noty ({
                 theme: 'mint',
                 text: 'Data saved successfully',
@@ -115,9 +117,6 @@ class BookForm extends Component {
             this.props.history.push('/books');
         }
         catch(ex) {
-            /*            console.log(ex.message);
-                        console.log(ex.request);
-                        console.log(ex.response);*/
             const msg = `${ex.response.data}`;
             new Noty ({
                 theme: 'mint',
@@ -129,7 +128,7 @@ class BookForm extends Component {
     };
 
     async updatebook() {
-
+            http.setToken();
         try {
             const {book} = this.state;
             const {data} = await axios.put(book_api+'/'+this.props.match.params.id, book);
@@ -219,11 +218,14 @@ class BookForm extends Component {
                         />
                     </div>
                     <div className="col-sm-6">
-                        <Link
-                            to='/authors/new'
-                            className="btn btn-primary"
-                            style={{marginTop: 32, marginLeft: 20}}
-                        >Create New Author </Link>
+                        {getRole() === 'admin' ? (
+                            <Link
+                                to='/authors/new'
+                                className="btn btn-primary"
+                                style={{marginTop: 32, marginLeft: 20}}
+                            >Create New Author </Link>
+                        ) : null}
+
                     </div>
                 </div>
                 <div className="row">
@@ -236,11 +238,14 @@ class BookForm extends Component {
                         />
                     </div>
                     <div className="col-sm-6">
-                        <Link
-                            to='/category/add'
-                            className="btn btn-primary"
-                            style={{marginTop: 32, marginLeft: 20}}
-                        >Create New Category </Link>
+                        {getRole() === 'admin' ? (
+                            <Link
+                                to='/category/add'
+                                className="btn btn-primary"
+                                style={{marginTop: 32, marginLeft: 20}}
+                            >Create New Category </Link>
+                        ) : null}
+
                     </div>
                 </div>
 
@@ -267,10 +272,12 @@ class BookForm extends Component {
                            fieldValue={abstract}
                            onInputChange={this.handleChange}
                 />
-                <SubmitButton buttonClass={buttonClass}
-                              buttonLabel={buttonLabel}
-                              onSubmit={this.handleSubmit}
-                />
+                {getRole() === 'admin' ? (
+                    <SubmitButton buttonClass={buttonClass}
+                                  buttonLabel={buttonLabel}
+                                  onSubmit={this.handleSubmit}
+                    />
+                ) : null}
                 <Link
                     to='/books'
                     className="btn btn-secondary"

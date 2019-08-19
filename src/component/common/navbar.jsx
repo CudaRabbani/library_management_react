@@ -23,7 +23,7 @@ const NavBar = (props) => {
                                 <NavDropdown title="User" id="collasible-nav-dropdown">
                                     <NavDropdown.Item><NavLink to="/users">Users</NavLink></NavDropdown.Item>
                                     <NavDropdown.Item><NavLink to="/users/password">Password Set</NavLink></NavDropdown.Item>
-                                    <NavDropdown.Item><NavLink to="/users/password/reset">Password Reset</NavLink></NavDropdown.Item>
+                                    <NavDropdown.Item><NavLink to="/password/reset">Password Reset</NavLink></NavDropdown.Item>
                                     <NavDropdown.Divider />
                                     <NavDropdown.Item href="#action/3.4">Will be added later</NavDropdown.Item>
                                 </NavDropdown>

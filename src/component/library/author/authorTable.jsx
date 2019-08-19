@@ -5,11 +5,14 @@ import axios from 'axios';
 import TableHeader from "../../common/table/tableHeader";
 import TableBody from "../../common/table/tableBody";
 import Noty from "noty";
+import http from '../../../util/httpService';
+import {CurrentUser} from "../../../util/currentUser";
+
 const author_api = "http://localhost:4044/api/author";
 
 class AuthorTable extends Component {
     state = {
-        tableHeader: [
+        /*tableHeader: [
             {id: 0, label: '#'},
             {id: 1, label: 'Name'},
             {id: 2, label: 'Sex'},
@@ -36,9 +39,49 @@ class AuthorTable extends Component {
                     Delete
                 </button>
             }
-        ],
+        ],*/
         authors: []
     };
+
+    tableHeader= [
+        {id: 0, label: '#'},
+        {id: 1, label: 'Name'},
+        {id: 2, label: 'Sex'},
+        {id: 3, label: 'DOB'},
+        {id: 4, label: ''},
+
+    ];
+    tableBody= [
+        {id: 0, type: 'data', data: 'name'},
+        {id: 1, type: 'data', data: 'sex'},
+        {id: 2, type: 'data', data: 'dob'},
+        {id: 3, type: 'button',
+            content: author => <button
+            className="btn btn-warning"
+            onClick={()=>this.updateAuthor(author)}>
+            Show
+            </button>
+        },
+
+     ];
+
+    constructor () {
+        super();
+        const user = CurrentUser();
+        if (user && user.role === "admin") {
+            this.tableHeader.push(
+                {id: 5, label: ''},
+                );
+            this.tableBody.push({id: 4, type: 'button',
+                content: author => <button
+                    className="btn btn-danger"
+                    onClick={()=>this.deleteAuthor(author)}
+                >
+                    Delete
+                </button>
+            });
+        }
+    }
 
     async getAuthors () {
         const api_end = "http://localhost:4044/api/author";
@@ -67,6 +110,7 @@ class AuthorTable extends Component {
 
     componentDidMount() {
         document.title="Author List";
+        const {user} = this.props;
         this.getAuthors();
     }
 
@@ -80,6 +124,7 @@ class AuthorTable extends Component {
         const afterDelete = beforeDelete.filter(a=> a._id !== author._id);
         this.setState({authors: afterDelete});
         try {
+            http.setToken();
             const {data} = await axios.delete(author_api+'/'+author._id);
             new Noty ({
                 theme: 'mint',
@@ -100,7 +145,9 @@ class AuthorTable extends Component {
     }
 
     render() {
-        const {tableHeader, tableBody, authors} = this.state;
+        const {authors} = this.state;
+        const tableHeader=this.tableHeader;
+        const tableBody=this.tableBody;
         return (
             <div className="container">
                 <div className="row">

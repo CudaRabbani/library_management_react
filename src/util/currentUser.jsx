@@ -1,6 +1,6 @@
 import jwtDecode from 'jwt-decode';
 
-export function getUser () {
+export function CurrentUser () {
     try {
         const token = localStorage.getItem("token");
         const {_email, _id, _role, _info} = jwtDecode(token);
@@ -20,7 +20,12 @@ export function getUser () {
 
 };
 
+export function getRole () {
+    const {role} = CurrentUser();
+    return role;
+};
+
 export function getToken() {
     const token = localStorage.getItem("token");
     return token;
-}
+};

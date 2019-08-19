@@ -36,7 +36,8 @@ class UserPassword extends Component {
         const userinfo_id = this.state.user._id;
         const finaldata = {...data};
 
-        const user_api = "http://localhost:4044/api/user/password/"+this.state.user._id;
+        const user_api = "http://localhost:4044/api/user/password/"+userinfo_id;
+
         try {
             const {data} = await axios.put(user_api,finaldata);
             new Noty ({
@@ -47,8 +48,8 @@ class UserPassword extends Component {
             }).show();
             this.props.history.push('/users');
         }
-        catch (ex) {
-            const msg = `${ex.response}`;
+        catch (err) {
+            const msg = `${err.response.data}`;
             new Noty ({
                 theme: 'mint',
                 text: msg,
@@ -159,7 +160,6 @@ class UserPassword extends Component {
                     </form>
                 :
                     <form>
-                        <p>User form {this.state.user._id}</p>
                         <TextInput fieldLabel='Email Address'
                                    fieldId='email'
                                    fieldValue={this.state.user.email}

@@ -20,7 +20,6 @@ class User extends Component {
                     <div className="col">
                         <Switch>
                             <Route path="/users" exact component={UserInfo}/>
-                            <Route path="/users/me" exact component={UserForm}/>
                             <Route path="/users/new" exact component={UserForm}/>
                             <Route path="/users/edit/:id" exact component={UserForm}/>
                             <Route path="/users/password" exact component={UserPassword}/>

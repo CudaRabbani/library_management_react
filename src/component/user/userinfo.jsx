@@ -8,6 +8,8 @@ import {Link} from "react-router-dom";
 import Noty from "noty";
 import ListGroup from "../common/listgroup";
 
+const user_endpoint = "http://localhost:4044/api/user";
+
 class UserInfo extends Component {
 
     state = {
@@ -45,7 +47,6 @@ class UserInfo extends Component {
     };
 
     updateUser = (user) => {
-        console.log('update user');
         this.props.history.push('/users/edit/'+user.userinfo._id);
     };
     deleteUser = async (user) => {
@@ -82,20 +83,19 @@ class UserInfo extends Component {
     ];
 
     async componentDidMount() {
-        const userinfo_endpoint = "http://localhost:4044/api/user";
-        const {data} = await axios.get(userinfo_endpoint);
-        const userinfo = data.map(d=> {
+        const {data} = await axios.get(user_endpoint);
+        const users = data.map(d=> {
             let temp = {...d};
             temp['activatedOn']=new Date(temp.activatedOn).toDateString();
             return temp;
         });
-        this.setState({userinfo});
-        this.setState({infoDisplayed:userinfo});
+        this.setState({users});
+        this.setState({infoDisplayed:users});
         this.setState({userCategory: this.userCategories[0]});
     }
 
     getSelectedCategoryUser(category) {
-        const users = this.state.userinfo;
+        const users = this.state.users;
         if (category === 'all') {
             this.setState({infoDisplayed:users});
         }

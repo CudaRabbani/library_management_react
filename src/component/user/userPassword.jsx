@@ -7,6 +7,7 @@ import SubmitButton from "../common/form/submitButton";
 import http from '../../util/httpService';
 import Noty from "noty";
 import {Link} from "react-router-dom";
+import {CurrentUser, getRole} from "../../util/currentUser";
 
 const userinfo_api = "http://localhost:4044/api/userinfo";
 
@@ -47,7 +48,7 @@ class UserPassword extends Component {
                 type: "success",
                 timeout: 4000
             }).show();
-            this.props.history.push('/users');
+            this.props.history.push('/me');
         }
         catch (err) {
             const msg = `${err.response.data}`;
@@ -74,7 +75,11 @@ class UserPassword extends Component {
                 type: "success",
                 timeout: 4000
             }).show();
-            this.props.history.push('/users');
+            const user = CurrentUser();
+           if (!user) {
+                this.props.history.push('/login');
+           }
+            getRole() === 'admin' ? this.props.history.push('/users') : this.props.history.push('/me');
         }
         catch (ex) {
             const msg = `${ex.response}`;
@@ -120,7 +125,7 @@ class UserPassword extends Component {
             this.setState({userFound: true});
         }
         catch(ex) {
-            const msg = ex.response.data || ex.message;
+            const msg = ex.response || ex.response.data || ex.message;
             new Noty ({
                 theme: 'mint',
                 text: msg,

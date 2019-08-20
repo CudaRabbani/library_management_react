@@ -5,6 +5,7 @@ import CatchError from "../../common/catcherror";
 import CategoryTable from "./categoryTable";
 import AddCategory from "./addCategory";
 import ListGroup from "../../common/listgroup";
+import {getRole} from "../../../util/currentUser";
 
 class Category extends Component {
     state= {
@@ -26,7 +27,11 @@ class Category extends Component {
                 </div>
                 <div className="row m-2">
                     <div className="col-sm-3">
-                        <Link to="/category/add" className="btn btn-primary">New Category</Link>
+                        {getRole() === 'admin' && (
+                            <Link to="/category/add"
+                                  className="btn btn-primary"
+                            >New Category</Link>
+                        )}
                     </div>
                     <div className="col-sm-9">
                         <Switch>

@@ -33,7 +33,7 @@ class Login extends Component {
             window.location="/";
         }
         catch (ex) {
-            const msg = ex.response.data || ex.message || ex.request;
+            const msg = ex.message || ex.request || ex.response.data;
             new Noty ({
                 theme: 'mint',
                 text: msg,
@@ -51,28 +51,28 @@ class Login extends Component {
     render() {
         const {email, password} = this.state.login;
         return (
-            <body className="container">
-            <form className="form-signin">
-                <TextInput
-                    fieldLabel="Email"
-                    fieldId="email" placeHolder="Email Address"
-                    fieldValue={email}
-                    onInputChange={this.handleTextInput}
-                />
-                <TextInput
-                    fieldLabel="Password"
-                    fieldId="password" placeHolder="Password"
-                    fieldValue={password}
-                    onPasswordChange={this.handleTextInput}
-                    password="true"
-                />
-                <SubmitButton
-                    buttonClass="btn btn-primary"
-                    buttonLabel="Login"
-                    onSubmit={this.handleSubmit}
-                />
-            </form>
-            </body>
+            <div className="container">
+                <form className="form-signin">
+                    <TextInput
+                        fieldLabel="Email"
+                        fieldId="email" placeHolder="Email Address"
+                        fieldValue={email}
+                        onInputChange={this.handleTextInput}
+                    />
+                    <TextInput
+                        fieldLabel="Password"
+                        fieldId="password" placeHolder="Password"
+                        fieldValue={password}
+                        onPasswordChange={this.handleTextInput}
+                        password="true"
+                    />
+                    <SubmitButton
+                        buttonClass="btn btn-primary"
+                        buttonLabel="Login"
+                        onSubmit={this.handleSubmit}
+                    />
+                </form>
+            </div>
         );
     }
 }

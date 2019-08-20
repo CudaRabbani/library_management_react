@@ -15,20 +15,30 @@ const NavBar = (props) => {
                     <Nav className="mr-auto">
                         <NavLink className="nav-item nav-link" to="/">Home <span className="sr-only">(current)</span></NavLink>
                         <NavLink className="nav-item nav-link" to="/books">Books</NavLink>
-                        {user && (
+                        {user && user.role==='admin' &&
+                        (
                             <React.Fragment>
                                 <NavLink className="nav-item nav-link" to="/inventory">Inventory</NavLink>
-                                <NavLink className="nav-item nav-link" to="/category">Category</NavLink>
-                                <NavLink className="nav-item nav-link" to="/authors">Author</NavLink>
-                                <NavDropdown title="User" id="collasible-nav-dropdown">
-                                    <NavDropdown.Item><NavLink to="/users">Users</NavLink></NavDropdown.Item>
-                                    <NavDropdown.Item><NavLink to="/users/password">Password Set</NavLink></NavDropdown.Item>
-                                    <NavDropdown.Item><NavLink to="/password/reset">Password Reset</NavLink></NavDropdown.Item>
-                                    <NavDropdown.Divider />
-                                    <NavDropdown.Item href="#action/3.4">Will be added later</NavDropdown.Item>
-                                </NavDropdown>
                             </React.Fragment>
                         )}
+                        <React.Fragment>
+                            <NavLink className="nav-item nav-link" to="/category">Category</NavLink>
+                            <NavLink className="nav-item nav-link" to="/authors">Author</NavLink>
+                            {user && user.role==='admin' &&
+                            (
+                                <React.Fragment>
+                                    <NavDropdown title="User" id="collasible-nav-dropdown">
+                                        <NavDropdown.Item><NavLink to="/users">Users</NavLink></NavDropdown.Item>
+                                        <NavDropdown.Item><NavLink to="/users/password">Password Set</NavLink></NavDropdown.Item>
+                                        <NavDropdown.Item><NavLink to="/password/reset">Password Reset</NavLink></NavDropdown.Item>
+                                        <NavDropdown.Divider />
+                                        <NavDropdown.Item href="#action/3.4">Will be added later</NavDropdown.Item>
+                                    </NavDropdown>
+                                </React.Fragment>
+                            )
+
+                            }
+                        </React.Fragment>
                     </Nav>
                     {!user && (
                         <React.Fragment>
@@ -40,7 +50,7 @@ const NavBar = (props) => {
                     {user && (
                         <React.Fragment>
                             <Nav>
-                                <Nav.Link eventKey={2} href={"/users/edit/"+user.info_id}>
+                                <Nav.Link eventKey={2} href={"/me"}>
                                     {user.email}
                                 </Nav.Link>
                                 <Nav.Link href="/logout">Logout</Nav.Link>

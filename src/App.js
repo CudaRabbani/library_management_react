@@ -17,8 +17,8 @@ import {CurrentUser} from "./util/currentUser";
 import ProtectedRoute from "./component/common/protectedRoute";
 import AccessDenied from "./component/common/accessDenied";
 import AdminRoute from "./component/common/adminRoute";
-import UserForm from "./component/user/userForm";
 import UserPassword from "./component/user/userPassword";
+import UserForm from "./component/user/userForm";
 
 
 class App extends Component {
@@ -42,6 +42,8 @@ class App extends Component {
                     <Switch>
                         <AdminRoute path="/inventory" component={BookInventory}/>
                         <ProtectedRoute path='/books' component={Book}/>
+                        <Route path="/me" exact component={UserForm}/>
+                        {/*<ProtectedRoute path='/users/me' component={User}/>*/}
                         <AdminRoute path='/users' component={User}/>
                         <ProtectedRoute path='/category' component={Category}/>
                         <ProtectedRoute path='/authors' component={Author}/>
@@ -54,22 +56,6 @@ class App extends Component {
                         <Redirect to='/notfound'/>
                     </Switch>
                 </div>
-                {/*<div className='row'>
-          <div className="col-sm-3">
-              <BookCategory />
-          </div>
-          <div className="col-sm-9">
-              <Switch>
-                  <Route path='/books' component={BookList}/>
-                  <Route path='/book/:id' component={Book}/>
-                  <Route path='/user/:id' component={UserInfo}/>
-                  <Route path='/category' component={CategoryList}/>
-                  <Route path='/notfound' component={NotFound} />
-                  <Redirect from='/' to='/books'/>
-                  <Redirect to='/notfound'/>
-              </Switch>
-          </div>
-      </div>*/}
             </div>
         );
     }

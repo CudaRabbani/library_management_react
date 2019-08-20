@@ -7,12 +7,11 @@ import axios from 'axios';
 import _ from 'lodash';
 import CustomSelect from "../common/form/customSelect";
 import http from '../../util/httpService';
+import {CurrentUser} from "../../util/currentUser";
 
 const api_endpoint = "http://localhost:4044/api/userinfo";
 
 class UserForm extends Component {
-
-
     state={
         action: [],
         usersex: [],
@@ -25,8 +24,17 @@ class UserForm extends Component {
         {_id: 1, name: 'Female'}
     ];
 
+/*    constructor(props) {
+        super();
+        if (props.location.pathname.indexOf('/me') > 0) {
+            const user = CurrentUser();
+            this.setState({user});
+        }
+    }*/
+
 
     async getUserInfo (id) {
+        console.log(id);
         http.setToken();
         const userInfo_endpoint = api_endpoint+'/'+id;
         try {
@@ -74,7 +82,7 @@ class UserForm extends Component {
     async updateUserInfo () {
         const {userinfo} = this.state;
         try {
-            const put_url = api_endpoint+'/'+this.props.match.params.id;
+            const put_url = api_endpoint+'/'+CurrentUser().info_id;
             const {data} = await axios.put(put_url, userinfo);
             new Noty ({
                 theme: 'mint',
@@ -82,7 +90,6 @@ class UserForm extends Component {
                 type: "success",
                 timeout: 4000
             }).show();
-            this.props.history.push('/users');
         }
         catch (ex) {
             const msg = `${ex.response.data}`;
@@ -131,6 +138,12 @@ class UserForm extends Component {
     }
 
     componentDidMount() {
+        if (this.props.location.pathname.indexOf("/me") >= 0) {
+            const user=CurrentUser();
+            console.log(user);
+            this.getUserInfo(user.info_id);
+            return;
+        }
         const user_id = this.props.match.params.id;
         const usersex = this.sex;
         this.setState({usersex});
@@ -138,6 +151,7 @@ class UserForm extends Component {
             this.setState({action:'create'});
             return;
         }
+
 
         this.getUserInfo(user_id);
     }
@@ -157,13 +171,9 @@ class UserForm extends Component {
             buttonLabel="Update"
         }
         return (
-            <div>
+            <div className="container">
                 <h3>User Form</h3>
                 <form>
-{/*                    <div className="row">
-                        <div className="col-sm-6"></div>
-                        <div className="col-sm-6"></div>
-                    </div>*/}
                     <div className="row">
                         <div className="col-sm-6">
                             <TextInput fieldLabel="First Name"
@@ -263,6 +273,11 @@ class UserForm extends Component {
                                   buttonLabel={buttonLabel}
                                   onSubmit={this.handleSubmit}
                     />
+                    <Link
+                        to='/password/reset'
+                        className="btn btn-light"
+                        style={{margin: 20}}
+                    >Reset Password</Link>
                     <Link
                         to='/users'
                         className="btn btn-secondary"

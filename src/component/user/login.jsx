@@ -33,7 +33,7 @@ class Login extends Component {
             window.location="/";
         }
         catch (ex) {
-            const msg = ex.response.data || ex.message || ex.request;
+            const msg = ex.message || ex.request || ex.response.data;
             new Noty ({
                 theme: 'mint',
                 text: msg,

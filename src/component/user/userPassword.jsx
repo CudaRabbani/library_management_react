@@ -47,7 +47,7 @@ class UserPassword extends Component {
                 type: "success",
                 timeout: 4000
             }).show();
-            this.props.history.push('/users');
+            this.props.history.push('/me');
         }
         catch (err) {
             const msg = `${err.response.data}`;
@@ -74,7 +74,7 @@ class UserPassword extends Component {
                 type: "success",
                 timeout: 4000
             }).show();
-            this.props.history.push('/users');
+            this.props.history.push('/me');
         }
         catch (ex) {
             const msg = `${ex.response}`;

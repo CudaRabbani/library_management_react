@@ -6,40 +6,12 @@ import TableHeader from "../../common/table/tableHeader";
 import TableBody from "../../common/table/tableBody";
 import Noty from "noty";
 import http from '../../../util/httpService';
-import {CurrentUser} from "../../../util/currentUser";
+import {CurrentUser, getRole} from "../../../util/currentUser";
 
 const author_api = "http://localhost:4044/api/author";
 
 class AuthorTable extends Component {
     state = {
-        /*tableHeader: [
-            {id: 0, label: '#'},
-            {id: 1, label: 'Name'},
-            {id: 2, label: 'Sex'},
-            {id: 3, label: 'DOB'},
-            {id: 4, label: ''},
-            {id: 5, label: ''},
-        ],
-        tableBody: [
-            {id: 0, type: 'data', data: 'name'},
-            {id: 1, type: 'data', data: 'sex'},
-            {id: 2, type: 'data', data: 'dob'},
-            {id: 3, type: 'button',
-                content: author => <button
-                    className="btn btn-warning"
-                    onClick={()=>this.updateAuthor(author)}>
-                    Edit
-                </button>
-            },
-            {id: 4, type: 'button',
-                content: author => <button
-                    className="btn btn-danger"
-                    onClick={()=>this.deleteAuthor(author)}
-                >
-                    Delete
-                </button>
-            }
-        ],*/
         authors: []
     };
 
@@ -154,7 +126,12 @@ class AuthorTable extends Component {
                     <div className="col-sm-3"></div>
                     <div className="col-sm-9">
                         <p></p>
-                        <Link to="/authors/new" className="btn btn-primary" style={{marginTop: 2, marginBottom: 3}}>Create New</Link>
+                        {getRole() === 'admin' && (
+                            <Link to="/authors/new"
+                                  className="btn btn-primary"
+                                  style={{marginTop: 2, marginBottom: 3}}
+                            >Create New</Link>
+                        )}
                         <table className="table m-1">
                             <TableHeader headerText={tableHeader}/>
                             <TableBody tableData={authors} tableDataExtractor={tableBody}/>

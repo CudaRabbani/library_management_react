@@ -44,6 +44,7 @@ const NavBar = (props) => {
                         <React.Fragment>
                             <Nav>
                                 <Nav.Link href="/login">Login</Nav.Link>
+                                <Nav.Link href="/users/new">SignUp</Nav.Link>
                             </Nav>
                         </React.Fragment>
                     )}

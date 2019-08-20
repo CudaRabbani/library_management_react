@@ -24,6 +24,7 @@ import UserForm from "./component/user/userForm";
 class App extends Component {
     state= {};
     componentDidMount() {
+        console.warn = console.error = () => {};
         try {
             const user = CurrentUser();
             this.setState({user});
@@ -43,7 +44,8 @@ class App extends Component {
                         <AdminRoute path="/inventory" component={BookInventory}/>
                         <ProtectedRoute path='/books' component={Book}/>
                         <Route path="/me" exact component={UserForm}/>
-                        {/*<ProtectedRoute path='/users/me' component={User}/>*/}
+                        <Route path="/users/new" exact component={UserForm}/>
+                        <Route path='/users/password' component={UserPassword}/>
                         <AdminRoute path='/users' component={User}/>
                         <ProtectedRoute path='/category' component={Category}/>
                         <ProtectedRoute path='/authors' component={Author}/>
